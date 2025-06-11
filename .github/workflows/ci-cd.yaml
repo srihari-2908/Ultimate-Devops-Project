@@ -13,7 +13,7 @@ jobs:
 
     env:
       IMAGE_NAME: srihari0829/otel-recommendation
-      DEPLOYMENT_FILE: Kubernetes-Manifests/recommendation-deployment.yaml
+      DEPLOYMENT_FILE: Kubernetes-Manifests/complete-deploy.yaml
 
     steps:
       - name: Checkout code
