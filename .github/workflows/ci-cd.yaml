@@ -1,6 +1,7 @@
 name: CI/CD Pipeline for RecommendationService
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'src/**'
@@ -13,7 +14,7 @@ jobs:
 
     env:
       IMAGE_NAME: srihari0829/otel-recommendation
-      DEPLOYMENT_FILE: Kubernetes-Manifests/complete-deploy.yaml
+      DEPLOYMENT_FILE: ./Kubernetes-Manifests/complete-deploy.yaml
 
     steps:
       - name: Checkout code
