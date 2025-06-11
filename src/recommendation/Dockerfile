@@ -1,40 +1,30 @@
-# --- Stage 1: Build stage ---
-FROM python:3.14.0b2-slim-bookworm AS builder
-# Avoid interactive prompts during package installs
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PYTHONUNBUFFERED=1
+# Copyright The OpenTelemetry Authors
+# SPDX-License-Identifier: Apache-2.0
 
-# Set workdir
-WORKDIR /usr/src/app
 
-# Install dependencies
-COPY requirements.txt ./
-RUN pip install --upgrade pip \
-    && pip install --user --no-cache-dir -r requirements.txt
+FROM python:3.12-alpine3.21 AS build-venv
 
-# Install OpenTelemetry instrumentations
-RUN ~/.local/bin/opentelemetry-bootstrap -a install
+RUN apk update && \
+    apk add gcc g++ linux-headers
 
-# Copy app source
-COPY . .
+COPY requirements.txt requirements.txt
 
-# --- Stage 2: Final image ---
-FROM python:3.14.0b2-slim-bookworm
+RUN python -m venv venv && \
+    venv/bin/pip install --no-cache-dir -r requirements.txt
 
-ENV PYTHONUNBUFFERED=1
-ENV PATH=/root/.local/bin:$PATH
-ENV RECOMMENDATION_PORT=1010
+RUN venv/bin/opentelemetry-bootstrap -a install
 
-# Set workdir
-WORKDIR /usr/src/app
+FROM python:3.12-alpine3.21
 
-# Create non-root user
-RUN useradd -m appuser
-USER appuser
+COPY --from=build-venv /venv/ /venv/
 
-# Copy dependencies and app code from builder stage
-COPY --from=builder /root/.local /root/.local
-COPY --from=builder /usr/src/app /usr/src/app
+WORKDIR /app
 
-# Run app
-ENTRYPOINT ["python", "recommendation_server.py"]
+COPY demo_pb2_grpc.py demo_pb2_grpc.py
+COPY demo_pb2.py demo_pb2.py
+COPY logger.py logger.py
+COPY metrics.py metrics.py
+COPY recommendation_server.py recommendation_server.py
+
+EXPOSE ${RECOMMENDATION_PORT}
+ENTRYPOINT [ "/venv/bin/opentelemetry-instrument", "/venv/bin/python", "recommendation_server.py" ]

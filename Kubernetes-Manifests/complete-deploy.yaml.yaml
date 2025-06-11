@@ -189,7 +189,7 @@ metadata:
     app.kubernetes.io/version: "1.12.0"
     app.kubernetes.io/part-of: opentelemetry-demo
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - port: 8080
       name: tcp-service
@@ -1629,7 +1629,7 @@ spec:
       serviceAccountName: opentelemetry-demo
       containers:
         - name: recommendationservice
-          image: 'ghcr.io/open-telemetry/demo:1.12.0-recommendationservice'
+          image: 'srihari0829/otel-recommendation:v1.0.0'
           imagePullPolicy: IfNotPresent
           ports:
             
@@ -1645,9 +1645,9 @@ spec:
               value: 'opentelemetry-demo-otelcol'
             - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
               value: cumulative
-            - name: RECOMMENDATION_SERVICE_PORT
+            - name: RECOMMENDATION_PORT
               value: "8080"
-            - name: PRODUCT_CATALOG_SERVICE_ADDR
+            - name: PRODUCT_CATALOG_ADDR
               value: 'opentelemetry-demo-productcatalogservice:8080'
             - name: OTEL_PYTHON_LOG_CORRELATION
               value: "true"
