@@ -55,4 +55,4 @@ jobs:
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
           git add ${{ env.DEPLOYMENT_FILE }}
           git commit -m "Update image tag to ${{ steps.vars.outputs.sha_short }}" || echo "No changes to commit"
-          git push
+          git push origin HEAD:${{ github.ref_name }}
