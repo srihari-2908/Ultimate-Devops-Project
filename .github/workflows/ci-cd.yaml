@@ -47,8 +47,12 @@ jobs:
           sed -i "s|\(image: '${{ env.IMAGE_NAME }}:\).*'|\1${{ steps.vars.outputs.sha_short }}'|" ${{ env.DEPLOYMENT_FILE }}
 
       - name: Commit updated manifest
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git commit -am "Update image tag to ${{ steps.vars.outputs.sha_short }}"
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
+          git add ${{ env.DEPLOYMENT_FILE }}
+          git commit -m "Update image tag to ${{ steps.vars.outputs.sha_short }}" || echo "No changes to commit"
           git push
