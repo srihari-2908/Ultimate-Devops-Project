@@ -16,6 +16,7 @@ RUN venv/bin/opentelemetry-bootstrap -a install
 
 FROM python:3.12-alpine3.21
 
+
 COPY --from=build-venv /venv/ /venv/
 
 WORKDIR /app
