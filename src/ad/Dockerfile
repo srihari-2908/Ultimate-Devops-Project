@@ -13,6 +13,8 @@ RUN chmod +x ./gradlew
 RUN ./gradlew
 RUN ./gradlew downloadRepos
 
+
+
 COPY . ./
 COPY ./pb/ ./proto
 RUN chmod +x ./gradlew
