@@ -1629,7 +1629,7 @@ spec:
       serviceAccountName: opentelemetry-demo
       containers:
         - name: recommendationservice
-          image: 'srihari0829/otel-recommendation:b083c92'
+          image: 'srihari0829/otel-recommendation:5984cc1'
           imagePullPolicy: IfNotPresent
           ports:
             
