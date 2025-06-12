@@ -504,7 +504,7 @@ spec:
       serviceAccountName: opentelemetry-demo
       containers:
         - name: adservice
-          image: 'ghcr.io/open-telemetry/demo:1.12.0-adservice'
+          image: 'srihari0829/otel-add:v1.0.0'
           imagePullPolicy: IfNotPresent
           ports:
             

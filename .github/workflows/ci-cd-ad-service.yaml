@@ -1,0 +1,57 @@
+name: CI/CD Pipeline for RecommendationService
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/ad/**'
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    env:
+      IMAGE_NAME: srihari0829/otel-add
+      DEPLOYMENT_FILE: ./Kubernetes-Manifests/complete-deploy.yaml
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract short SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/recommendation
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:v1.0.0
+            ${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}
+
+      - name: Update image tag in Kubernetes manifest
+        run: |
+          sed -i "s|\(image: '${{ env.IMAGE_NAME }}:\).*'|\1${{ steps.vars.outputs.sha_short }}'|" ${{ env.DEPLOYMENT_FILE }}
+
+      - name: Commit updated manifest
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add ${{ env.DEPLOYMENT_FILE }}
+          git commit -m "Update image tag to ${{ steps.vars.outputs.sha_short }}" || echo "No changes to commit"
+          git push
