@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for RecommendationService
+name: CI/CD Pipeline for Ad_Service
 
 on:
   workflow_dispatch:
@@ -38,7 +38,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: ./src/recommendation
+          context: ./src/ad
           push: true
           tags: |
             ${{ env.IMAGE_NAME }}:v1.0.0
