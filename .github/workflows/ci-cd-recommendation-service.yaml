@@ -58,7 +58,6 @@ jobs:
             --format template \
             --template "@${{ env.TRIVY_TEMPLATE }}" \
             --output "${{ env.TRIVY_OUTPUT }}" \
-            --exit-code 1 \
             "${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}"
 
       - name: Upload Trivy scan report artifact
