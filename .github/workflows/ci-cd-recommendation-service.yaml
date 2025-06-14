@@ -55,7 +55,7 @@ jobs:
         run: |
           mkdir -p Trivy-Report
           trivy image \
-            --format template
+            --format template \
             --template "@${{ env.TRIVY_TEMPLATE }}" \
             --output "${{ env.TRIVY_OUTPUT }}" \
             --exit-code 1 \
