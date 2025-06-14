@@ -55,10 +55,10 @@ jobs:
         run: |
           mkdir -p Trivy-Report
           trivy image \
+            --format template
             --template "@${{ env.TRIVY_TEMPLATE }}" \
             --output "${{ env.TRIVY_OUTPUT }}" \
             --exit-code 1 \
-            --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL \
             "${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}"
 
       - name: Upload Trivy scan report artifact
