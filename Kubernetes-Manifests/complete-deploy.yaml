@@ -504,7 +504,7 @@ spec:
       serviceAccountName: opentelemetry-demo
       containers:
         - name: adservice
-          image: 'srihari0829/otel-add:2420840'
+          image: 'srihari0829/otel-add:1dc3363'
           imagePullPolicy: IfNotPresent
           ports:
             
