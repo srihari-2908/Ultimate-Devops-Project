@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Trivy Vulnerability Report</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    h1, h2 { color: #333; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 2em; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    tr:nth-child(even) { background-color: #fafafa; }
+    .CRITICAL { color: red; font-weight: bold; }
+    .HIGH { color: darkorange; font-weight: bold; }
+    .MEDIUM { color: goldenrod; }
+    .LOW { color: green; }
+  </style>
+</head>
+<body>
+  <h1>Trivy Scan Report</h1>
+
+  {{ range . }}
+    <h2>Target: {{ .Target }}</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Library</th>
+          <th>Vulnerability</th>
+          <th>Severity</th>
+          <th>Status</th>
+          <th>Installed Version</th>
+          <th>Fixed Version</th>
+          <th>Title</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ range .Vulnerabilities }}
+          <tr>
+            <td>{{ .PkgName }}</td>
+            <td><a href="https://avd.aquasec.com/nvd/{{ lower .VulnerabilityID }}" target="_blank">{{ .VulnerabilityID }}</a></td>
+            <td class="{{ .Severity }}">{{ .Severity }}</td>
+            <td>{{ if .FixedVersion }}Fix Available{{ else }}Unfixed{{ end }}</td>
+            <td>{{ .InstalledVersion }}</td>
+            <td>{{ .FixedVersion }}</td>
+            <td>{{ .Title }}</td>
+          </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  {{ end }}
+</body>
+</html>
