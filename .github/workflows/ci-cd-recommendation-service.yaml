@@ -46,6 +46,13 @@ jobs:
             ${{ env.IMAGE_NAME }}:v1.0.0
             ${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}
 
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install wget -y
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.49.1_Linux-64bit.deb
+          sudo dpkg -i trivy_0.49.1_Linux-64bit.deb
+
       - name: Run Trivy Scan with HTML Output
         run: |
           mkdir -p Trivy-Report
