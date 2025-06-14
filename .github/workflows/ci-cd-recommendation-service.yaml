@@ -18,7 +18,7 @@ jobs:
       IMAGE_NAME: srihari0829/otel-recommendation
       DEPLOYMENT_FILE: ./Kubernetes-Manifests/complete-deploy.yaml
       TRIVY_TEMPLATE: ./Trivy-Report/report.tmpl
-      TRIVY_OUTPUT: ./Trivy-Report/trivy-report.html
+      TRIVY_OUTPUT: ./Trivy-Report/trivy-report-recommendation-service.html
 
     steps:
       - name: Checkout code
